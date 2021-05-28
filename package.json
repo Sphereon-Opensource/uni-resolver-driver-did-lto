@@ -1,0 +1,22 @@
+{
+  "name": "uni-resolver-driver-did-lto",
+  "version": "0.0.1",
+  "description": "Universal Resolver Driver LTO",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.21.1",
+    "connect": "^3.2.0",
+    "dotenv": "^10.0.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "2.0.2"
+  }
+}
