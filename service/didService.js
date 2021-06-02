@@ -88,7 +88,7 @@ const getTargetIdentifier = identifier => {
  * returns DID document object
  **/
 const getDidDocument = (nodeAddress, identifier) => {
-  //const url = nodeAddress + constants.RESOLVE_ENDPOINT;
+  //const url = nodeAddress + constants.RESOLVE_ENDPOINT + identifier;
   const url = 'https://api.github.com/repos/atom/atom/license';
   return axios.get(url)
     .then(response => response.data)
