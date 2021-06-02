@@ -10,7 +10,7 @@ const constants = require('../utils/constants');
  * accept String The requested MIME type of the DID document or DID resolution result. (optional)
  * returns Object
  **/
-const resolve = (identifier, accept) => {
+exports.resolve = (identifier, accept) => {
   return new Promise(function(resolve, reject) {
     const startTime = Date.now();
 
@@ -38,7 +38,7 @@ const resolve = (identifier, accept) => {
     const targetIdentifier = getTargetIdentifier(identifier);
 
     // get did document
-    getDidDocument2(nodeAddress, targetIdentifier)
+    getDidDocument(nodeAddress, targetIdentifier)
       .then(response => {
         // wrap did document in did resolution result
         const didResolutionResult = createDidResolutionResult(targetIdentifier, response, networkId, nodeAddress, startTime);
@@ -87,43 +87,10 @@ const getTargetIdentifier = identifier => {
  * returns Network ID
  **/
 const getDidDocument = (nodeAddress, identifier) => {
-  const url = nodeAddress + constants.RESOLVE_ENDPOINT;
-  return axios.get(url)
-    .then(response => response.data)
-};
-
-const getDidDocument2 = (nodeAddress, identifier) => {
+  //const url = nodeAddress + constants.RESOLVE_ENDPOINT;
   const url = 'https://api.github.com/repos/atom/atom/license';
   return axios.get(url)
-  .then(response => response.data)
-};
-
-const getDidDocumentMock = (nodeAddress, identifier) => {
-  return new Promise((resolve, reject) => {
-    resolve(
-        {
-          '@context': 'https://www.w3.org/ns/did/v1',
-          'id': 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH',
-          'verificationMethod': [
-            {
-              'id': 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH#key',
-              'type': 'Ed25519VerificationKey2018',
-              'controller': 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH',
-              'publicKeyBase58': 'mMyJxTQuXW9bQVLmJeCrWNCSKzsEMkbZQ3xuNavj6Mk',
-            }
-          ],
-          'authentication': [
-            'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH#key'
-          ],
-          'assertionMethod': [
-            'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH#key'
-          ],
-          'capabilityInvocation': [
-            'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH#key'
-          ]
-        }
-    );
-  });
+    .then(response => response.data)
 };
 
 /**
@@ -176,9 +143,4 @@ const createMethodMetadata = (networkName, nodeAddress) => {
     network: networkName.toUpperCase(),
     ltoNode: nodeAddress,
   }
-};
-
-module.exports = {
-  resolve,
-  getDidDocumentMock,
 };
