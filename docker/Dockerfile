@@ -1,13 +1,13 @@
 # Dockerfile for exampleorg/uni-resolver-driver-did-example
 
 FROM node:10
-MAINTAINER Markus Sabadello <markus@danubetech.com>
+MAINTAINER Sphereon <dev@sphereon.com>
 
 # build uni-resolver-driver-did-example
 
 WORKDIR /usr/src/app
 COPY package.json ./
-RUN npm install
+RUN npm install22
 COPY . .
 
 # variables

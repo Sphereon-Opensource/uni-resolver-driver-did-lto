@@ -5,7 +5,7 @@ info:
   contact:
     name: Sphereon B.V.
     email: dev@sphereon.com
-  version: 0.0.1
+  version: 1.0.0
 servers:
 - url: https://virtserver.swaggerhub.com/universal-resolver/universal-resolver-driver/1.0.0
   description: SwaggerHub API Auto Mocking

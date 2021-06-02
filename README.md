@@ -22,15 +22,17 @@ In either case there are several environment variables to configure runtime para
 TODO
 
 #### NODE<X>_NETWORK_ID
-Defines the network Id (name). There can only be one network ID per driver instance. If loadbalancing/HA is needed that is the responsibility of the node itself. The network name can be supplied in 2 ways. As a parameter within the request or as part of the DID, eg for testnet.
+Defines the network Id (name). There can only be one network ID per driver instance. If loadbalancing/HA is needed that is the responsibility of the node itself. 
+^ is this applicable?
+
+The network name can be supplied as part of the DID, eg for testnet.
 ````
 did:lto:testnet:3JuijVBB7NCwCz2Ae5HhCDsqCXzeBLRTyeL
 ````
-The <network_id> part in the did:factom:<network_id>:<chain_id> is completely optional. Default mainnet and testnet can be used for the respective networks. "mainnet" is the default when no network is supplied in the param or DID. For public mainnet the whole :<network_id> part in the DID would be committed., eg:
+The <network_id> part in the did:factom:<network_id>:<chain_id> is completely optional. Default mainnet and testnet can be used for the respective networks. "mainnet" is the default when no network is supplied in the DID. For public mainnet the whole :<network_id> part in the DID would be committed., eg:
 ````
 did:lto:3JuijVBB7NCwCz2Ae5HhCDsqCXzeBLRTyeL
 ````
-A request param for the network name always takes precedence over the DID method part.
 
 
 ## Build and Run (Docker)
@@ -45,4 +47,12 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:lto:3JuijVBB7NCwCz2Ae5HhCD
 
 ```
 npm start
+```
+
+## Run tests (NodeJS)
+
+For running the tests node 13.6.0 or higher is required.
+
+```
+npm run test
 ```

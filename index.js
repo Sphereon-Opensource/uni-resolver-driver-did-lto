@@ -1,11 +1,10 @@
 'use strict';
 
-require('dotenv').config();
 const path = require('path');
 const http = require('http');
 
 const oas3Tools = require('oas3-tools');
-const serverPort = process.env.uniresolver_driver_did_lto_port;
+const serverPort = 8080;
 
 // swaggerRouter configuration
 const options = {
