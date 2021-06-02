@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-const networkNameEnum = require('../service/networkNameEnum');
+const constants = require('../utils/constants');
 
 /**
  * Resolve a DID or other identifier.
@@ -10,35 +10,38 @@ const networkNameEnum = require('../service/networkNameEnum');
  * accept String The requested MIME type of the DID document or DID resolution result. (optional)
  * returns Object
  **/
-exports.resolve = function(identifier, accept) {
+const resolve = (identifier, accept) => {
   return new Promise(function(resolve, reject) {
     const startTime = Date.now();
 
-    let networkId = networkNameEnum.networkNameEnum.MAINNET;
-    const parts = identifier.split(":");
-    if (parts.length > 3) {
-      networkId = networkNameEnum.getValue(parts[2]);
-      if (!networkId) {
-        resolve(500); // TODO make more descriptive
-        return;
-      }
-    }
-
-    const node_address = networkId === networkNameEnum.networkNameEnum.MAINNET ? process.env.uniresolver_driver_did_lto_url_mainnet : process.env.uniresolver_driver_did_lto_url_testnet;
-    if (!node_address) {
-      resolve(500); // TODO make more descriptive
+    // match identifier to lto did pattern
+    const match = identifier.match(constants.DID_LTO_METHOD_PATTERN);
+    if (!match) {
+      resolve(400);
       return;
     }
 
-    // match identifier to lto did pattern
-    const match = identifier.match(process.env.uniresolver_driver_did_lto_method_pattern);
-    if (!match) {
-      resolve(400) // TODO make more descriptive
+    // get network id
+    const networkId = getNetworkId(identifier);
+    if (!networkId) {
+      resolve(500);
+      return;
     }
 
-    getDidDocumentMock(node_address, identifier)
+    // get node url (MAINNET /TESTNET)
+    const nodeAddress = networkId === constants.MAINNET_KEY ? constants.URL_MAINNET : constants.URL_TESTNET;
+    if (!nodeAddress) {
+      resolve(500);
+      return;
+    }
+
+    const targetIdentifier = getTargetIdentifier(identifier);
+
+    // get did document
+    getDidDocument2(nodeAddress, targetIdentifier)
       .then(response => {
-        const didResolutionResult = createDidResolutionResult(response, networkId, node_address, startTime);
+        // wrap did document in did resolution result
+        const didResolutionResult = createDidResolutionResult(targetIdentifier, response, networkId, nodeAddress, startTime);
         resolve(didResolutionResult)
       })
       .catch(() => resolve(500))
@@ -46,19 +49,56 @@ exports.resolve = function(identifier, accept) {
 };
 
 /**
- * Retrieves the DID document from the LTO identity node
+ * Retrieves the network ID from default (MAINNET) or did
  *
  * node_address String An address to a LTO identity node.
  * identifier String A DID or other identifier to be resolved.
  * returns DID document object
  **/
-const getDidDocument = (node_address, identifier) => {
-  const url = node_address + process.env.uniresolver_driver_did_lto_resolve_endpoint;
+const getNetworkId = identifier => {
+  const parts = identifier.split(':');
+  if (parts.length > 3) {
+    return parts[2].toLowerCase();
+  }
+
+  return constants.MAINNET_KEY;
+};
+
+/**
+ * Retrieves the target identifier from the provided identifier param
+ *
+ * identifier String A DID or other identifier to be resolved.
+ * returns Identifier
+ **/
+const getTargetIdentifier = identifier => {
+  const parts = identifier.split(':');
+  if (parts.length > 3) {
+    parts.splice(2, 1);
+    return parts.join(':');
+  }
+
+  return identifier;
+};
+
+/**
+ * Retrieves the DID document from the LTO identity node
+ *
+ * identifier String A DID or other identifier to be resolved.
+ * returns Network ID
+ **/
+const getDidDocument = (nodeAddress, identifier) => {
+  const url = nodeAddress + constants.RESOLVE_ENDPOINT;
   return axios.get(url)
     .then(response => response.data)
 };
 
-const getDidDocumentMock = (node_address, identifier) => {
+const getDidDocument2 = (nodeAddress, identifier) => {
+  const url = 'https://api.github.com/repos/atom/atom/license';
+  return axios.get(url)
+  .then(response => response.data)
+};
+
+const getDidDocumentMock = (nodeAddress, identifier) => {
   return new Promise((resolve, reject) => {
     resolve(
         {
@@ -95,12 +135,12 @@ const getDidDocumentMock = (node_address, identifier) => {
  * startTime Date The start time of the resolution process
  * returns DID Resolution result object
  **/
-const createDidResolutionResult = (didDocument, networkName, node_address, startTime) => {
+const createDidResolutionResult = (identifier, didDocument, networkName, nodeAddress, startTime) => {
   const didResolutionResult = {
     '@context': 'https://w3id.org/did-resolution/v1',
     didDocument: {...didDocument},
-    resolverMetadata: {...createResolverMetadata(startTime)},
-    methodMetadata: {...createMethodMetadata(networkName, node_address)},
+    resolverMetadata: {...createResolverMetadata(identifier, startTime, nodeAddress)},
+    methodMetadata: {...createMethodMetadata(networkName, nodeAddress)},
   };
 
   return didResolutionResult;
@@ -112,15 +152,15 @@ const createDidResolutionResult = (didDocument, networkName, node_address, start
  * startTime Date The start time of the resolution process
  * returns DID Resolution metadata object
  **/
-const createResolverMetadata = startTime => {
+const createResolverMetadata = (identifier, startTime, nodeAddress) => {
   return {
     startTime,
     duration: Date.now() - startTime,
     method: "lto",
-    didUrl: '',
-    driverId: '',
-    vendor: 'lto',
-    version: '',
+    didUrl: `${nodeAddress}/${identifier}`,
+    driverId: 'Sphereon/driver-did-lto',
+    vendor: 'LTO',
+    version: '1.0.0',
   }
 };
 
@@ -131,10 +171,14 @@ const createResolverMetadata = startTime => {
  * node_address String The node used to retrieve the DID document
  * returns DID document metadata object
  **/
-const createMethodMetadata = (networkName, node_address) => {
+const createMethodMetadata = (networkName, nodeAddress) => {
   return {
     network: networkName.toUpperCase(),
-    ltoNode: node_address,
+    ltoNode: nodeAddress,
   }
 };
 
+module.exports = {
+  resolve,
+  getDidDocumentMock,
+};
