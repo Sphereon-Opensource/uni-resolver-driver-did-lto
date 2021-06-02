@@ -11,8 +11,8 @@ const constants = require('../utils/constants');
  * returns Object
  **/
 exports.resolve = (identifier, accept) => {
-  return new Promise(function(resolve, reject) {
-    const startTime = Date.now();
+  return new Promise((resolve, reject) => {
+    const startTime = new Date();
 
     // match identifier to lto did pattern
     const match = identifier.match(constants.DID_LTO_METHOD_PATTERN);
@@ -122,7 +122,7 @@ const createDidResolutionResult = (identifier, didDocument, networkName, nodeAdd
 const createResolverMetadata = (identifier, startTime, nodeAddress) => {
   return {
     startTime,
-    duration: Date.now() - startTime,
+    duration: new Date() - startTime,
     method: "lto",
     didUrl: `${nodeAddress}/${identifier}`,
     driverId: 'Sphereon/driver-did-lto',
