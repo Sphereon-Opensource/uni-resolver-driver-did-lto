@@ -12,12 +12,12 @@ describe('LTO did pattern match', () => {
     const identifier = 'did:lto:testnet:0000000000123457';
     assert(identifier.match(constants.DID_LTO_METHOD_PATTERN))
   });
-  it('identifier should not match pattern with wrong did', () => {
+  it('identifier should not match pattern with wrong did method', () => {
     const identifier = 'did:other:0000000000123457';
     assert.equal(identifier.match(constants.DID_LTO_METHOD_PATTERN), null)
   });
-  it('identifier should not match pattern with wrong did and network id', () => {
-    const identifier = 'did:other:testnet:0000000000123457';
+  it('identifier should not match pattern with wrong scheme', () => {
+    const identifier = 'wrong:other:testnet:0000000000123457';
     assert.equal(identifier.match(constants.DID_LTO_METHOD_PATTERN), null)
   });
 });
