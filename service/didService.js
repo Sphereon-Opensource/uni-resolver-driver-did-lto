@@ -30,11 +30,6 @@ exports.resolve = (identifier, accept) => {
 
     // get node url (MAINNET /TESTNET)
     const nodeAddress = networkId === constants.MAINNET_KEY ? constants.URL_MAINNET : constants.URL_TESTNET;
-    if (!nodeAddress) {
-      resolve(500);
-      return;
-    }
-
     const targetIdentifier = getTargetIdentifier(identifier);
 
     // get did document
