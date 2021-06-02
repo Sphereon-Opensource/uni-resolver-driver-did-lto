@@ -51,9 +51,8 @@ exports.resolve = (identifier, accept) => {
 /**
  * Retrieves the network ID from default (MAINNET) or did
  *
- * node_address String An address to a LTO identity node.
  * identifier String A DID or other identifier to be resolved.
- * returns DID document object
+ * returns Network ID
  **/
 const getNetworkId = identifier => {
   const parts = identifier.split(':');
@@ -80,11 +79,13 @@ const getTargetIdentifier = identifier => {
   return identifier;
 };
 
+
 /**
  * Retrieves the DID document from the LTO identity node
  *
+ * node_address String An address to a LTO identity node.
  * identifier String A DID or other identifier to be resolved.
- * returns Network ID
+ * returns DID document object
  **/
 const getDidDocument = (nodeAddress, identifier) => {
   //const url = nodeAddress + constants.RESOLVE_ENDPOINT;
@@ -97,17 +98,17 @@ const getDidDocument = (nodeAddress, identifier) => {
  * Creates the DID resolution result
  *
  * didDocument object A DID document
- * networkName String The network name used to retrieve the DID document
+ * networkId String The network name used to retrieve the DID document
  * node_address String The node used to retrieve the DID document
  * startTime Date The start time of the resolution process
  * returns DID Resolution result object
  **/
-const createDidResolutionResult = (identifier, didDocument, networkName, nodeAddress, startTime) => {
+const createDidResolutionResult = (identifier, didDocument, networkId, nodeAddress, startTime) => {
   const didResolutionResult = {
     '@context': 'https://w3id.org/did-resolution/v1',
     didDocument: {...didDocument},
     resolverMetadata: {...createResolverMetadata(identifier, startTime, nodeAddress)},
-    methodMetadata: {...createMethodMetadata(networkName, nodeAddress)},
+    methodMetadata: {...createMethodMetadata(networkId, nodeAddress)},
   };
 
   return didResolutionResult;
@@ -127,20 +128,19 @@ const createResolverMetadata = (identifier, startTime, nodeAddress) => {
     didUrl: `${nodeAddress}/${identifier}`,
     driverId: 'Sphereon/driver-did-lto',
     vendor: 'LTO',
-    version: '1.0.0',
   }
 };
 
 /**
  * Creates the DID document metadata
  *
- * networkName String The network name used to retrieve the DID document
+ * networkId String The network name used to retrieve the DID document
  * node_address String The node used to retrieve the DID document
  * returns DID document metadata object
  **/
-const createMethodMetadata = (networkName, nodeAddress) => {
+const createMethodMetadata = (networkId, nodeAddress) => {
   return {
-    network: networkName.toUpperCase(),
+    network: networkId.toUpperCase(),
     ltoNode: nodeAddress,
   }
 };

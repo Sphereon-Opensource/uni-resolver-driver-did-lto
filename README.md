@@ -29,7 +29,7 @@ The network name can be supplied as part of the DID, eg for testnet.
 ````
 did:lto:testnet:3JuijVBB7NCwCz2Ae5HhCDsqCXzeBLRTyeL
 ````
-The <network_id> part in the did:lto:<network_id>:<chain_id> is completely optional. Default mainnet and testnet can be used for the respective networks. "mainnet" is the default when no network is supplied in the DID. For public mainnet the whole :<network_id> part in the DID would be omitted., eg:
+The <network_id> part in the did:lto:<network_id>:<chain_id> is completely optional. Default mainnet and testnet can be used for the respective networks. Mainnet is the default when no network is supplied in the DID. For public mainnet the whole :<network_id> part in the DID would be omitted., eg:
 ````
 did:lto:3JuijVBB7NCwCz2Ae5HhCDsqCXzeBLRTyeL
 ````
