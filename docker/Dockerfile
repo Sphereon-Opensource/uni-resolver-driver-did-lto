@@ -1,9 +1,9 @@
-# Dockerfile for exampleorg/uni-resolver-driver-did-example
+# Dockerfile for sphereon/driver-did-lto
 
 FROM node:10
 MAINTAINER Sphereon <dev@sphereon.com>
 
-# build uni-resolver-driver-did-example
+# build driver-did-lto
 
 WORKDIR /usr/src/app
 COPY package.json ./
