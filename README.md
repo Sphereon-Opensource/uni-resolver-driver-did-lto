@@ -51,8 +51,6 @@ npm start
 
 ## Run tests (NodeJS)
 
-For running the tests node 13.6.0 or higher is required.
-
 ```
 npm run test
 ```
