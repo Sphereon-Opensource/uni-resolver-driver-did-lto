@@ -7,7 +7,7 @@ MAINTAINER Sphereon <dev@sphereon.com>
 
 WORKDIR /usr/src/app
 COPY package.json ./
-RUN npm install22
+RUN npm install
 COPY . .
 
 # variables
