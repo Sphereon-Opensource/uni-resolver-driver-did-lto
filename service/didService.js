@@ -2,6 +2,7 @@
 
 const axios = require('axios');
 const constants = require('../utils/constants');
+const clientService = require('./clientsService');
 
 /**
  * Resolve a DID or other identifier.
@@ -28,8 +29,13 @@ exports.resolve = (identifier, accept) => {
       return;
     }
 
-    // get node url (MAINNET /TESTNET)
-    const nodeAddress = networkId === constants.MAINNET_KEY ? constants.URL_MAINNET : constants.URL_TESTNET;
+    // get client
+    const client = getClient(networkId);
+    if (!client) {
+      resolve(400);
+    }
+    const nodeAddress = client.url;
+
     const targetIdentifier = getTargetIdentifier(identifier);
 
     // get did document
@@ -118,7 +124,7 @@ const createResolverMetadata = (identifier, startTime, nodeAddress) => {
   return {
     startTime,
     duration: new Date() - startTime,
-    method: "lto",
+    method: 'lto',
     didUrl: `${nodeAddress}/${identifier}`,
     driverId: 'Sphereon/driver-did-lto',
     vendor: 'LTO',
@@ -137,4 +143,14 @@ const createMethodMetadata = (networkId, nodeAddress) => {
     network: networkId.toUpperCase(),
     ltoNode: nodeAddress,
   }
+};
+
+/**
+ * Retrieves client based on network ID
+ *
+ * networkId String The network name used to retrieve the DID document
+ * returns Client object
+ **/
+const getClient = networkId => {
+  return clientService.clients.find(client => client.networkId === networkId);
 };
