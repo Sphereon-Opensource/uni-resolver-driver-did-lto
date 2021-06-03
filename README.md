@@ -14,9 +14,15 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ```
 
-## Network ID
+### Environment variables
+The universal resolver can connect to multiple networks and nodes. There are 9 of these slots available, and they can be configured using environment variables.
+By default the public LTO mainnet and testnet are configured using the identity node. If you want to disable them, overwrite the values, or disable the slot. The 9 slots denoted by <X> are ranging from 1-9. 
 
-The network name can be supplied as part of the DID, eg for testnet.
+#### NODE<X>_ENABLED
+Enables or disables the node. Please see below to disable default mainnet and testnet nodes when required (slots 1 and 2 respectively)
+
+#### NODE<X>_NETWORK_ID
+Defines the network Id (name). There can only be one network ID per driver instance. If loadbalancing/HA is needed that is the responsibility of the node itself. The network name can be supplied as part of the DID, eg for testnet.
 ````
 did:lto:testnet:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ````
