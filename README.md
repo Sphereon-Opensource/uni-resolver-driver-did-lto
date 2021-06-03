@@ -14,9 +14,6 @@ This is an [Universal Resolver](https://github.com/decentralized-identity/univer
 did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ```
 
-## Environment variables
-TODO
-
 ## Network ID
 
 The network name can be supplied as part of the DID, eg for testnet.
@@ -28,14 +25,12 @@ The <network_id> part in the did:lto:<network_id>:<chain_id> is completely optio
 did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ````
 
-
 ## Build and Run (Docker)
 ```
 docker build -f ./docker/Dockerfile . -t sphereon/driver-did-lto
 docker run -p 8080:8080 sphereon/driver-did-lto
 curl -X GET http://localhost:8080/1.0/identifiers/did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ```
-
 
 ## Build and Run (NodeJS)
 
@@ -48,3 +43,13 @@ npm start
 ```
 npm run test
 ```
+
+## API documentation
+
+The API docs are also hosted. These can be found on the following URL once the driver is running.
+
+```
+http://localhost:8080/docs
+```
+
+

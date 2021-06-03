@@ -10,10 +10,6 @@ COPY package.json ./
 RUN npm install
 COPY . .
 
-# variables
-
-ENV uniresolver_driver_did_example_exampleSetting=exampleSetting
-
 # done
 
 EXPOSE 8080
