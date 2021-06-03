@@ -46,28 +46,20 @@ describe('Resolve identifier', () => {
   };
 
   it('identifier should resolve to did resolution result without a network id', async () => {
-    nock('https://api.github.com')
-      .get('/repos/atom/atom/license')
-      .reply(200, testDidDocument);
-
     const identifier = 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
 
-    // nock(constants.URL_MAINNET)
-    //   .get(constants.RESOLVE_ENDPOINT + identifier)
-    //   .reply(200, testDidDocument);
+    nock(constants.URL_MAINNET)
+      .get(constants.RESOLVE_ENDPOINT + identifier)
+      .reply(200, testDidDocument);
 
     await execute(identifier);
   });
   it('identifier should resolve to did resolution result with a network id', async () => {
-    nock('https://api.github.com')
-      .get('/repos/atom/atom/license')
-      .reply(200, testDidDocument);
-
     const identifier = 'did:lto:testnet:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
 
-    // nock(constants.URL_TESTNET)
-    //   .get(constants.RESOLVE_ENDPOINT + identifier)
-    //   .reply(200, testDidDocument);
+    nock(constants.URL_TESTNET)
+      .get(constants.RESOLVE_ENDPOINT + 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH')
+      .reply(200, testDidDocument);
 
     await execute(identifier);
   });
