@@ -2,7 +2,7 @@
 
 # Universal Resolver Driver: did:lto
 
-This is an [Universal Resolver](https://github.com/decentralized-identity/universal-resolver/) driver for **did:lto** identifiers.
+This is a [Universal Resolver](https://github.com/decentralized-identity/universal-resolver/) driver for **did:lto** identifiers.
 
 ## Specifications
 
