@@ -25,6 +25,12 @@ The <network_id> part in the did:lto:<network_id>:<chain_id> is completely optio
 did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH
 ````
 
+## Run tests (NodeJS)
+
+```
+npm run test
+```
+
 ## Build and Run (Docker)
 ```
 docker build -f ./docker/Dockerfile . -t sphereon/driver-did-lto
@@ -36,12 +42,6 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:lto:3JugjxT51cTjWAsgnQK4Sp
 
 ```
 npm start
-```
-
-## Run tests (NodeJS)
-
-```
-npm run test
 ```
 
 ## API documentation
