@@ -3,7 +3,7 @@
 const path = require('path');
 const http = require('http');
 const oas3Tools = require('oas3-tools');
-const clients = require('./service/clientsService');
+const clients = require('./service/clientService');
 
 const serverPort = 8080;
 

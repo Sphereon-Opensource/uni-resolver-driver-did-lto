@@ -2,7 +2,7 @@
 
 const axios = require('axios');
 const constants = require('../utils/constants');
-const clientService = require('./clientsService');
+const clientService = require('./clientService');
 
 /**
  * Resolve a DID or other identifier.
