@@ -18,6 +18,7 @@ exports.resolve = (identifier, accept) => {
     // match identifier to lto did pattern
     const match = identifier.match(constants.DID_LTO_METHOD_PATTERN);
     if (!match) {
+      console.error(`Identifier does not match LTO pattern. Identifier: ${identifier}`);
       resolve(400);
       return;
     }
@@ -25,6 +26,7 @@ exports.resolve = (identifier, accept) => {
     // get network id
     const networkId = getNetworkId(identifier);
     if (!networkId) {
+      console.error(`Could not get network id for identifier: ${identifier}`);
       resolve(500);
       return;
     }
@@ -32,6 +34,7 @@ exports.resolve = (identifier, accept) => {
     // get client
     const client = getClient(networkId);
     if (!client) {
+      console.error(`Could not get identity client for network with id: ${identifier}`);
       resolve(400);
     }
     const nodeAddress = client.url;
