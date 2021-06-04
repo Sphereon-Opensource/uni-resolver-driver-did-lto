@@ -49,7 +49,6 @@ exports.resolve = (identifier, accept) => {
       .then(response => {
         // wrap did document in did resolution result
         const didResolutionResult = createDidResolutionResult(targetIdentifier, response, networkId, nodeAddress, startTime);
-
         resolve({code: 200, payload: didResolutionResult});
       })
       .catch(error => {
