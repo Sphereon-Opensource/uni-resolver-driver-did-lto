@@ -1,12 +1,3 @@
-const ResponsePayload = function(code, payload) {
-  this.code = code;
-  this.payload = payload;
-};
-
-exports.respondWithCode = function(code, payload) {
-  return new ResponsePayload(code, payload);
-};
-
 exports.writeJson = function(response, input) {
   let payload = input.payload;
   if (typeof payload === 'object') {
