@@ -59,6 +59,6 @@ const addDefaultClients = () => {
 };
 
 module.exports = {
-  clients: clients,
+  clients,
   getClientsFromEnvironment,
 };
