@@ -36,6 +36,7 @@ const getClientsFromEnvironment = () => {
   }
 
   if (clients.length == 0) {
+    console.warn('No LTO networks defined in environment. Using default mainnet and testnet values');
     addDefaultClients();
   }
 };
