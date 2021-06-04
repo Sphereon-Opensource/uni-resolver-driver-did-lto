@@ -11,7 +11,7 @@
   "keywords": [
     "swagger"
   ],
-  "license": "Unlicense",
+  "license": "Apache2",
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
