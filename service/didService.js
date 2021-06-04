@@ -29,7 +29,7 @@ exports.resolve = (identifier, accept) => {
     if (!networkId) {
       const msg = `Could not get network id for identifier: ${identifier}`;
       console.error(msg);
-      resolve({code: 500, payload: msg});
+      resolve({code: 400, payload: msg});
       return;
     }
 
@@ -57,7 +57,7 @@ exports.resolve = (identifier, accept) => {
             resolve({code: 404, payload: `Identifier not found: ${targetIdentifier}`});
             return;
           }
-          resolve({code: error.response.status, payload: error.response.data});
+          resolve({code: 400, payload: error.response.data});
           return;
         }
 
