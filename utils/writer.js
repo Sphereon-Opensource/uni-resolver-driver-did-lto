@@ -1,4 +1,4 @@
-exports.writeJson = function(response, input) {
+exports.writeJson = (response, input) => {
   let payload = input.payload;
   if (typeof payload === 'object') {
     payload = JSON.stringify(payload, null, 2);
