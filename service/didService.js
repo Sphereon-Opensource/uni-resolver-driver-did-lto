@@ -18,24 +18,27 @@ exports.resolve = (identifier, accept) => {
     // match identifier to lto did pattern
     const match = identifier.match(constants.DID_LTO_METHOD_PATTERN);
     if (!match) {
-      console.error(`Identifier does not match LTO pattern. Identifier: ${identifier}`);
-      resolve(400);
+      const msg = `Identifier does not match LTO pattern. Identifier: ${identifier}`;
+      console.error(msg);
+      resolve({code: 400, payload: msg});
       return;
     }
 
     // get network id
     const networkId = getNetworkId(identifier);
     if (!networkId) {
-      console.error(`Could not get network id for identifier: ${identifier}`);
-      resolve(500);
+      const msg = `Could not get network id for identifier: ${identifier}`;
+      console.error(msg);
+      resolve({code: 500, payload: msg});
       return;
     }
 
     // get client
     const client = getClient(networkId);
     if (!client) {
-      console.error(`Could not get identity client for network with id: ${identifier}`);
-      resolve(400);
+      const msg = `Could not get identity client for network with id: ${identifier}`;
+      console.error(msg);
+      resolve({code: 400, payload: msg});
     }
     const nodeAddress = client.url;
 
@@ -46,9 +49,21 @@ exports.resolve = (identifier, accept) => {
       .then(response => {
         // wrap did document in did resolution result
         const didResolutionResult = createDidResolutionResult(targetIdentifier, response, networkId, nodeAddress, startTime);
-        resolve(didResolutionResult)
+
+        resolve({code: 200, payload: didResolutionResult});
       })
-      .catch(() => resolve(500))
+      .catch(error => {
+        if (error.response.status === 500) {
+          if (error.response.data.includes('NotFoundError')) {
+            resolve({code: 404, payload: `Identifier not found: ${targetIdentifier}`});
+            return;
+          }
+          resolve({code: error.response.status, payload: error.response.data});
+          return;
+        }
+
+        resolve({code: error.response.status, payload: error.response.data})
+      })
   });
 };
 
