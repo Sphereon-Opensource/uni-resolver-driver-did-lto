@@ -1,0 +1,11 @@
+{
+  "port": 8080,
+  "bodyLimit": "10kb",
+  "corsHeaders": [
+    "Link"
+  ],
+  "defaultUrlMainnetPermanent": "https://nodes.lto.network/indexer",
+  "defaultUrlMainnet": "https://lto-indexer-test.test.sphereon.io",
+  "defaultUrlTestnetPermanent": "https://testnet.lto.network/indexer",
+  "defaultUrlTestnet": "https://lto-indexer-test.test.sphereon.io"
+}
