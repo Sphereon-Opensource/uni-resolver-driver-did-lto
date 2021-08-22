@@ -23,7 +23,7 @@ ENV NODE2_LTO_URL https://lto-indexer-test.test.sphereon.io
 WORKDIR /lto/universal-resolver
 COPY package.json ./
 RUN npm install
-COPY docker .
+COPY . .
 
 # done
 
