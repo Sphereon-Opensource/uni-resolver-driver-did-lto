@@ -1,8 +1,8 @@
 'use strict';
 
-const axios = require('axios');
-const constants = require('../utils/constants');
-const clientService = require('./clientService');
+import axios from 'axios';
+import constants from '../constants';
+import clientService from './clientService';
 
 /**
  * Resolve a DID or other identifier.
@@ -11,7 +11,7 @@ const clientService = require('./clientService');
  * accept String The requested MIME type of the DID document or DID resolution result. (optional)
  * returns Object
  **/
-exports.resolve = (identifier, accept) => {
+const resolve = (identifier, accept) => {
   return new Promise((resolve, reject) => {
     const startTime = new Date();
 
@@ -46,23 +46,31 @@ exports.resolve = (identifier, accept) => {
 
     // get did document
     getDidDocument(nodeAddress, targetIdentifier)
-      .then(response => {
-        // wrap did document in did resolution result
-        const didResolutionResult = createDidResolutionResult(targetIdentifier, response, networkId, nodeAddress, startTime);
-        resolve({code: 200, payload: didResolutionResult});
-      })
-      .catch(error => {
-        if (error.response.status === 500) {
-          if (error.response.data.includes('NotFoundError')) {
-            resolve({code: 404, payload: `Identifier not found: ${targetIdentifier}`});
-            return;
-          }
+    .then(response => {
+      // wrap did document in did resolution result
+      const didResolutionResult = createDidResolutionResult(targetIdentifier,
+          response, networkId, nodeAddress, startTime);
+      resolve({code: 200, payload: didResolutionResult});
+    })
+    .catch(error => {
+      if (!error.response) {
+        console.error(`No response received, but we got an error: ${error.code}`);
+        resolve({
+          code: 500, payload: error.code
+        })
+      } else if (error.response.status === 500) {
+        if (error.response.data.includes('NotFoundError')) {
+          resolve({
+            code: 404,
+            payload: `Identifier not found: ${targetIdentifier}`
+          });
+        } else {
           resolve({code: 400, payload: error.response.data});
-          return;
         }
-
+      } else {
         resolve({code: error.response.status, payload: error.response.data})
-      })
+      }
+    })
   });
 };
 
@@ -89,14 +97,12 @@ const getNetworkId = identifier => {
  **/
 const getTargetIdentifier = identifier => {
   const parts = identifier.split(':');
-  if (parts.length > 3) {
+  if (parts.length > 3 && parts[2] == getNetworkId(identifier)) {
     parts.splice(2, 1);
     return parts.join(':');
   }
-
   return identifier;
 };
-
 
 /**
  * Retrieves the DID document from the LTO identity node
@@ -108,7 +114,7 @@ const getTargetIdentifier = identifier => {
 const getDidDocument = (nodeAddress, identifier) => {
   const url = nodeAddress + constants.RESOLVE_ENDPOINT + identifier;
   return axios.get(url)
-    .then(response => response.data)
+  .then(response => response.data)
 };
 
 /**
@@ -120,11 +126,14 @@ const getDidDocument = (nodeAddress, identifier) => {
  * startTime Date The start time of the resolution process
  * returns DID Resolution result object
  **/
-const createDidResolutionResult = (identifier, didDocument, networkId, nodeAddress, startTime) => {
+const createDidResolutionResult = (identifier, didDocument, networkId,
+    nodeAddress, startTime) => {
   const didResolutionResult = {
     '@context': 'https://w3id.org/did-resolution/v1',
     didDocument: {...didDocument},
-    resolverMetadata: {...createResolverMetadata(identifier, startTime, nodeAddress)},
+    resolverMetadata: {
+      ...createResolverMetadata(identifier, startTime, nodeAddress)
+    },
     methodMetadata: {...createMethodMetadata(networkId, nodeAddress)},
   };
 
@@ -171,3 +180,14 @@ const createMethodMetadata = (networkId, nodeAddress) => {
 const getClient = networkId => {
   return clientService.clients.find(client => client.networkId === networkId);
 };
+
+export default {
+  resolve,
+  getNetworkId,
+  createDidResolutionResult,
+  createResolverMetadata,
+  getClient,
+  getDidDocument,
+  getTargetIdentifier
+}
+

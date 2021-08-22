@@ -1,7 +1,11 @@
-const assert = require('assert');
-const nock = require('nock');
-const constants = require('../utils/constants');
-const didService = require('../service/didService');
+import assert from 'assert';
+import nock from 'nock';
+import constants from '../src/constants';
+import didService from '../src/service/didService';
+import config from '../src/config.json';
+import {getClientsFromEnvironment} from "../src/service/clientService";
+
+getClientsFromEnvironment({config});
 
 describe('LTO did pattern match', () => {
   it('identifier should match pattern without network id', () => {
@@ -48,7 +52,7 @@ describe('Resolve identifier', () => {
   it('identifier should resolve to did resolution result without a network id', async () => {
     const identifier = 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
 
-    nock(constants.URL_MAINNET)
+    nock(process.env.DEFAULT_URL_MAINNET || config.defaultUrlMainnet)
       .get(constants.RESOLVE_ENDPOINT + identifier)
       .reply(200, testDidDocument);
 
@@ -57,7 +61,7 @@ describe('Resolve identifier', () => {
   it('identifier should resolve to did resolution result with a network id', async () => {
     const identifier = 'did:lto:testnet:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
 
-    nock(constants.URL_TESTNET)
+    nock(process.env.DEFAULT_URL_TESTNET || config.defaultUrlTestnet)
       .get(constants.RESOLVE_ENDPOINT + 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH')
       .reply(200, testDidDocument);
 
@@ -67,9 +71,9 @@ describe('Resolve identifier', () => {
   const execute = async identifier => {
     const didResolutionResult = await didService.resolve(identifier);
 
-    assert.equal(didResolutionResult.hasOwnProperty('@context'), true);
-    assert.equal(didResolutionResult.hasOwnProperty('didDocument'), true);
-    assert.equal(didResolutionResult.hasOwnProperty('resolverMetadata'), true);
-    assert.equal(didResolutionResult.hasOwnProperty('methodMetadata'), true);
+    assert.equal(didResolutionResult.payload.hasOwnProperty('@context'), true);
+    assert.equal(didResolutionResult.payload.hasOwnProperty('didDocument'), true);
+    assert.equal(didResolutionResult.payload.hasOwnProperty('resolverMetadata'), true);
+    assert.equal(didResolutionResult.payload.hasOwnProperty('methodMetadata'), true);
   }
 });

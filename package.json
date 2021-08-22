@@ -1,24 +1,42 @@
 {
-  "name": "uni-resolver-driver-did-lto",
-  "version": "0.0.1",
+  "name": "@sphereon/uni-resolver-driver-did-lto",
+  "version": "0.1.0",
   "description": "Universal Resolver Driver LTO",
-  "main": "index.js",
+  "main": "dist",
   "scripts": {
-    "prestart": "npm install",
-    "start": "node index.js",
-    "test": "mocha"
+    "dev": "nodemon -w src --exec \"babel-node src\"",
+    "build": "babel src -s -D -d dist",
+    "start": "node dist",
+    "prestart": "npm run -s build",
+    "test": "mocha test/*.test.js --require @babel/register"
   },
   "keywords": [
     "swagger"
   ],
   "license": "Apache2",
-  "private": true,
+  "private": false,
   "dependencies": {
+    "@babel/runtime": "^7.15.3",
     "axios": "^0.21.1",
     "connect": "^3.2.0",
-    "js-yaml": "^3.3.0",
-    "mocha": "^8.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mocha": "^9.1.0",
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^4.1.6",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
     "nock": "^13.1.0",
-    "oas3-tools": "2.0.2"
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/register": "^7.12.1",
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.2.0",
+    "eslint": "^4.12.1",
+    "nodemon": "^1.19.4"
   }
 }

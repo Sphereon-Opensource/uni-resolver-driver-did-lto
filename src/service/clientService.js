@@ -1,6 +1,6 @@
 'use strict';
 
-const constants = require('../utils/constants');
+const constants = require('../constants');
 
 const clients = [];
 
@@ -8,7 +8,7 @@ const clients = [];
  * Maps a list of clients based on environment
  *
  **/
-const getClientsFromEnvironment = () => {
+const getClientsFromEnvironment = ({config}) => {
   const maxNodes = 9;
   for (let i = 1; i <= maxNodes; i++) {
     const enabled = process.env[`NODE${i}_ENABLED`];
@@ -32,12 +32,13 @@ const getClientsFromEnvironment = () => {
       networkId,
     };
 
+    console.log(`Enabled LTO Network '${client.networkId}' using node '${client.url}'`);
     clients.push(client)
   }
 
   if (clients.length == 0) {
     console.warn('No LTO networks defined in environment. Using default mainnet and testnet values');
-    addDefaultClients();
+    addDefaultClients({config});
   }
 };
 
@@ -45,15 +46,15 @@ const getClientsFromEnvironment = () => {
  * Adds the default clients to the clients list
  *
  **/
-const addDefaultClients = () => {
+const addDefaultClients = ({config}) => {
   clients.push({
     enabled: true,
-    url: constants.URL_MAINNET,
+    url: process.env.LTO_DEFAULT_URL_MAINNET || config.defaultUrlMainnet,
     networkId: constants.MAINNET_KEY,
   });
   clients.push({
     enabled: true,
-    url: constants.URL_TESTNET,
+    url: process.env.LTO_DEFAULT_URL_TESTNET || config.defaultUrlTestnet,
     networkId: constants.TESTNET_KEY,
   });
 };
