@@ -21,15 +21,3 @@ export default ({config}) => {
 
   return api;
 }
-
-
-  /*module.exports.resolve = (req, res, next, identifier, accept) => {
-    didService.resolve(identifier, accept)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-  };
-*/

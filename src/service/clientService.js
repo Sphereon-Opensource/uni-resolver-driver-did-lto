@@ -9,30 +9,33 @@ const clients = [];
  *
  **/
 const getClientsFromEnvironment = ({config}) => {
-  const maxNodes = 9;
+  const maxNodes = 9
   for (let i = 1; i <= maxNodes; i++) {
-    const enabled = process.env[`NODE${i}_ENABLED`];
+    const enabled = process.env[`NODE${i}_ENABLED`]
     if (!enabled) {
-      continue;
+      continue
     }
 
-    const url = process.env[`NODE${i}_LTO_URL`];
+    const url = process.env[`NODE${i}_LTO_URL`]
     if (!url) {
-      continue;
+      continue
     }
 
-    let networkId = process.env[`NODE${i}_NETWORK_ID`];
-    if (!networkId) {
-      networkId = constants.MAINNET_KEY;
+    const networkId = process.env[`NODE${i}_NETWORK_ID`]
+    let chainId = networkId
+    if (!networkId || networkId.toUpperCase() === constants.MAINNET_KEY || networkId.toLowerCase() === 'mainnet') {
+      chainId = constants.MAINNET_CHAINID
+    } else if (networkId.toUpperCase() === constants.TESTNET_KEY || networkId.toLowerCase() === 'testnet') {
+      chainId = constants.TESTNET_CHAINID
     }
 
     const client = {
       enabled,
       url,
-      networkId,
-    };
+      chainId,
+    }
 
-    console.log(`Enabled LTO Network '${client.networkId}' using node '${client.url}'`);
+    console.log(`Enabled LTO Network '${client.chainId}' using node '${client.url}'`);
     clients.push(client)
   }
 
@@ -50,12 +53,12 @@ const addDefaultClients = ({config}) => {
   clients.push({
     enabled: true,
     url: process.env.LTO_DEFAULT_URL_MAINNET || config.defaultUrlMainnet,
-    networkId: constants.MAINNET_KEY,
+    chainId: constants.MAINNET_CHAINID,
   });
   clients.push({
     enabled: true,
     url: process.env.LTO_DEFAULT_URL_TESTNET || config.defaultUrlTestnet,
-    networkId: constants.TESTNET_KEY,
+    chainId: constants.TESTNET_CHAINID,
   });
 };
 

@@ -1,6 +1,6 @@
 # Dockerfile for sphereon/uni-resolver-driver-did-lto
 
-FROM node:12.19.0
+FROM node:14-alpine
 MAINTAINER Sphereon <dev@sphereon.com>
 
 

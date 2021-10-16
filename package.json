@@ -1,7 +1,15 @@
 {
   "name": "@sphereon/uni-resolver-driver-did-lto",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Universal Resolver Driver LTO",
+  "repository": {
+    "url": "https://github.com/Sphereon-Opensource/uni-resolver-driver-did-lto",
+    "type": "git"
+  },
+  "author": {
+    "name": "Sphereon",
+    "email": "dev@sphereon.com"
+  },
   "main": "dist",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src\"",
@@ -11,32 +19,35 @@
     "test": "mocha test/*.test.js --require @babel/register"
   },
   "keywords": [
-    "swagger"
+    "LTO Network",
+    "DID",
+    "Decentralized Idenifier"
   ],
-  "license": "Apache2",
+  "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@babel/runtime": "^7.15.3",
-    "axios": "^0.21.1",
-    "connect": "^3.2.0",
+    "@babel/runtime": "^7.15.4",
+    "axios": "^0.23.0",
+    "bs58": "^4.0.1",
+    "connect": "^3.7.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mocha": "^9.1.0",
+    "mocha": "^9.1.3",
     "morgan": "^1.10.0",
     "swagger-ui-express": "^4.1.6",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nock": "^13.1.0",
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/node": "^7.12.6",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/register": "^7.12.1",
+    "nock": "^13.1.3",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/register": "^7.15.3",
     "babel-eslint": "^10.1.0",
-    "chai": "^4.2.0",
-    "eslint": "^4.12.1",
-    "nodemon": "^1.19.4"
+    "chai": "^4.3.4",
+    "eslint": "^8.0.1",
+    "nodemon": "^2.0.13"
   }
 }
