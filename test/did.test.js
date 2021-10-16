@@ -12,10 +12,6 @@ describe('LTO did pattern match', () => {
     const identifier = 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
     assert(identifier.match(constants.DID_LTO_METHOD_PATTERN))
   });
-  it('identifier should match pattern with network id', () => {
-    const identifier = 'did:lto:testnet:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
-    assert(identifier.match(constants.DID_LTO_METHOD_PATTERN))
-  });
   it('identifier should not match pattern with other did method', () => {
     const identifier = 'did:other:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
     assert.equal(identifier.match(constants.DID_LTO_METHOD_PATTERN), null)
@@ -58,15 +54,7 @@ describe('Resolve identifier', () => {
 
     await execute(identifier);
   });
-  it('identifier should resolve to did resolution result with a network id', async () => {
-    const identifier = 'did:lto:testnet:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH';
 
-    nock(process.env.DEFAULT_URL_TESTNET || config.defaultUrlTestnet)
-      .get(constants.RESOLVE_ENDPOINT + 'did:lto:3JugjxT51cTjWAsgnQK4SpmMqK6qua1VpXH')
-      .reply(200, testDidDocument);
-
-    await execute(identifier);
-  });
 
   const execute = async identifier => {
     const didResolutionResult = await didService.resolve(identifier);
