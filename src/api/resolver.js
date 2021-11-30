@@ -14,7 +14,7 @@ export default ({config}) => {
       res.status(200).send(response);
     })
     .catch(function (response) {
-      res.status(400).send(response);
+      res.status(200).send(response);
     });
 
   });

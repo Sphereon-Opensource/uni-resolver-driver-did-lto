@@ -21,7 +21,8 @@ const resolve = (identifier, accept) => {
     if (!match) {
       const msg = `Identifier does not match LTO pattern. Identifier: ${identifier}`
       console.error(msg)
-      return resolve({code: 400, payload: msg})
+      return resolve(
+          createDidResolutionError(identifier, null, msg, null, startTime))
     }
 
     // get network id
@@ -29,15 +30,17 @@ const resolve = (identifier, accept) => {
     if (!chainId) {
       const msg = `Could not get chain id for identifier: ${identifier}`
       console.error(msg)
-      return  resolve({code: 400, payload: msg})
+      return resolve(
+          createDidResolutionError(identifier, chainId, msg, null, startTime))
     }
 
     // get client
     const client = getClient(chainId);
     if (!client) {
-      const msg = `Could not get identity client for network with id: ${identifier}`
+      const msg = `Could not get identity client for network with id: ${chainId} and identifier: ${identifier}`
       console.error(msg)
-      return resolve({code: 400, payload: msg})
+      return resolve(
+          createDidResolutionError(identifier, chainId, msg, null, startTime))
     }
     const nodeAddress = client.url;
 
@@ -48,27 +51,27 @@ const resolve = (identifier, accept) => {
     getDidDocument(nodeAddress, targetIdentifier)
     .then(response => {
       // wrap did document in did resolution result
+      // console.log(response)
       const didResolutionResult = createDidResolutionResult(targetIdentifier,
           response, chainId, nodeAddress, startTime)
-      return resolve({code: 200, payload: didResolutionResult})
+      return resolve(didResolutionResult)
     })
     .catch(error => {
       if (!error.response) {
         console.error(`No response received, but we got an error: ${error}`)
-        return resolve({
-          code: 500, payload: error.code
-        })
-      } else if (error.response.status === 500) {
+        return resolve(createDidResolutionError(identifier, chainId, error.code,
+            nodeAddress, startTime))
+      } else if (error.response.status >= 400) {
+        console.error(error.response.data)
         if (error.response.data.includes('NotFoundError')) {
-          return resolve({
-            code: 404,
-            payload: `Identifier not found: ${targetIdentifier}`
-          })
+          return resolve(
+              createDidResolutionError(identifier, chainId, "not-found",
+                  nodeAddress, startTime))
         } else {
-          return resolve({code: 400, payload: error.response.data})
+          return resolve(
+              createDidResolutionError(identifier, chainId, error.response.data,
+                  nodeAddress, startTime))
         }
-      } else {
-        return resolve({code: error.response.status, payload: error.response.data})
       }
     })
   })
@@ -132,10 +135,33 @@ const getDidDocument = (nodeAddress, identifier) => {
 const createDidResolutionResult = (identifier, didDocument, networkId,
     nodeAddress, startTime) => {
   const didResolutionResult = {
-    '@context': 'https://w3id.org/did-resolution/v1',
     didDocument: {...didDocument},
     resolverMetadata: {
       ...createResolverMetadata(identifier, startTime, nodeAddress)
+    },
+    methodMetadata: {...createMethodMetadata(networkId, nodeAddress)},
+  };
+
+  return didResolutionResult;
+};
+
+/**
+ * Creates the DID resolution error
+ *
+ * @param error, the error
+ * @param networkId String The network name used to retrieve the DID document
+ * @param node_address String The node used to retrieve the DID document
+ * @param startTime Date The start time of the resolution process
+ * returns DID error object
+ **/
+const createDidResolutionError = (identifier, networkId, error,
+    nodeAddress, startTime) => {
+  const didResolutionResult = {
+    '@context': 'https://w3id.org/did-resolution/v1',
+    resolverMetadata: {
+      ...createResolverMetadata(identifier, startTime, nodeAddress),
+      error
+
     },
     methodMetadata: {...createMethodMetadata(networkId, nodeAddress)},
   };
