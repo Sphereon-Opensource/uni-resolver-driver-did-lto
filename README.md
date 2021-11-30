@@ -25,15 +25,12 @@ Enables or disables the node. eg true.
 Defines the url to the LTO node. eg https://testnet.lto.network.
 
 #### NODE<X>_NETWORK_ID
-Defines the network Id (name). There can only be one network ID per driver instance. If loadbalancing/HA is needed that is the responsibility of the node itself. The network name can be supplied as part of the DID, eg for testnet.
+Defines the network Id (name). There can only be one network ID per driver instance. If loadbalancing/HA is needed that is the responsibility of the node itself. The network name is part of the DID value and will automatically be extracted.
+
+Example DID
 ````
-did:lto:testnet:3N51gbw5W3xvSkcAXtLnXc3SQh2m9e6TBcy
+did:lto:3N39xg4xauubonEWf2BUCp1DmGGQ3U21jJT
 ````
-The <network_id> part in the did:lto:<network_id>:<chain_id> is completely optional. Default mainnet and testnet can be used for the respective networks. Mainnet is the default when no network is supplied in the DID. For public mainnet the whole :<network_id> part in the DID would be omitted., eg:
-````
-did:lto:3N51gbw5W3xvSkcAXtLnXc3SQh2m9e6TBcy
-````
-Note: The above DID does not exist on mainnet, it only serves the purpose
 
 ## Run tests (NodeJS)
 
@@ -43,10 +40,10 @@ npm run test
 
 ## Build and Run (Docker)
 ```
-docker build -f ./docker/Dockerfile . -t sphereon/uni-resolver-driver-did-lto
+docker build -f ./Dockerfile . -t sphereon/uni-resolver-driver-did-lto
 docker run -p 8080:8080 sphereon/uni-resolver-driver-did-lto
 
-curl -X GET http://localhost:8080/1.0/identifiers/did:lto:testnet:3N51gbw5W3xvSkcAXtLnXc3SQh2m9e6TBcy
+curl -X GET http://localhost:8080/1.0/identifiers/did:lto:3N39xg4xauubonEWf2BUCp1DmGGQ3U21jJT
 ```
 
 ## Build and Run (NodeJS)
