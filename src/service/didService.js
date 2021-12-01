@@ -135,7 +135,7 @@ const getDidDocument = (nodeAddress, identifier) => {
 const createDidResolutionResult = (identifier, didDocument, networkId,
     nodeAddress, startTime) => {
   const didResolutionResult = {
-    didDocument: {...didDocument},
+    didDocument,
     resolverMetadata: {
       ...createResolverMetadata(identifier, startTime, nodeAddress)
     },
@@ -157,7 +157,6 @@ const createDidResolutionResult = (identifier, didDocument, networkId,
 const createDidResolutionError = (identifier, networkId, error,
     nodeAddress, startTime) => {
   const didResolutionResult = {
-    '@context': 'https://w3id.org/did-resolution/v1',
     resolverMetadata: {
       ...createResolverMetadata(identifier, startTime, nodeAddress),
       error

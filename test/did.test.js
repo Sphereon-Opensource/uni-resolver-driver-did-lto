@@ -67,6 +67,7 @@ describe('Resolve mocked identifier', () => {
     const didResolutionResult = await didService.resolve(identifier);
 
     assert.equal(didResolutionResult.hasOwnProperty('didDocument'), true);
+    // assert.equal(didResolutionResult.didDocument.hasOwnProperty('@context'), true);
     assert.equal(didResolutionResult.hasOwnProperty('resolverMetadata'), true);
     assert.equal(didResolutionResult.hasOwnProperty('methodMetadata'), true);
   }
@@ -82,6 +83,7 @@ describe('Resolve identifier', () => {
   const execute = async identifier => {
     const didResolutionResult = await didService.resolve(identifier);
     assert.equal(didResolutionResult.hasOwnProperty('didDocument'), true);
+    assert.equal(didResolutionResult.didDocument.hasOwnProperty('@context'), true);
     assert.equal(didResolutionResult.hasOwnProperty('resolverMetadata'), true);
     assert.equal(didResolutionResult.hasOwnProperty('methodMetadata'), true);
   }
